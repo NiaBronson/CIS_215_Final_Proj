@@ -30,6 +30,7 @@ void showMenu(){
     
     //Added in office logs   
     ofstream officeLogs("logs.txt");
+    officeLogs.open("logs.txt");
 
     switch(menuChoice){
             case 1:
@@ -65,7 +66,7 @@ void showMenu(){
                 officeLogs << "Invalid Choice" << endl;
                 break;
         }
-
+    officeLogs.close();
 }
 
 void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients, vector<double>& rooms) {

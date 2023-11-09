@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <fstream>
+#include <chrono>
 
 #include "Patient.h"
 using namespace std;
@@ -36,6 +38,7 @@ Patient setPatientData(){
     double DoB;
     long appointmentID;
     long patientID;
+    int arrivalHour, arrivalMinute, arrivalSecond;
 
     cout << "Patient Name: " << endl;
     cin >> name;
@@ -88,7 +91,34 @@ Patient setPatientData(){
 }
 
 void addPatient(){
-    Patient Patient = setPatientData();
-    patientQueue.push(Patient);
+    //Opening the logs file to output patient logs
+    ofstream officeLogs;
+    officeLogs.open("logs.txt");
+
+    int arrivalHour, arrivalMinute, arrivalSecond;
+
+    //Getting arrival time
+    //Curr time won't update until recompilation 
+    //Tried different methods
+    //auto arrivalTime = std::chrono::system_clock::now();
+
+    //Getting arrival time
+    cout << "Patient Arrival Hour: " << endl;
+    cin >> arrivalHour;
+    cout << "Patient Arrival Minute: " << endl;
+    cin >> arrivalMinute;
+    cout << "Patient Arrival Second: " << endl;
+    cin >> arrivalSecond;
+    
+    //Logging Patient data
+    officeLogs << "Patient Arrival Time: " << arrivalHour << ":" << arrivalMinute << ":" << arrivalSecond << endl;
+
+    //Getting patient data and adding patient to queue
+    Patient currPatient = setPatientData();
+    patientQueue.push(currPatient);
+
+
 }
+
+
 

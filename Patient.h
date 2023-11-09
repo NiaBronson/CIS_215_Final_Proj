@@ -20,6 +20,7 @@ class Patient{
     long appointmentID;
     long patientID;
     Account patientAccount;
+    int arrivalHour, arrivalMinute, arrivalSecond;
 
 
     public:
@@ -63,6 +64,15 @@ class Patient{
     float patientBalanceGetter(){
         return patientAccount.balanceGetter();
     }
+    int arrivalHourGetter(){
+        return arrivalHour;
+    }
+    int arrivalMinuteGetter(){
+        return arrivalMinute;
+    }
+    int arrivalSecondGetter(){
+        return arrivalSecond;
+    }
 
     //Setters
     void nameSetter(string newName){
@@ -102,4 +112,14 @@ class Patient{
     void patientBalanceSetter(float newBalance){
         patientAccount.balanceSetter(newBalance);
     }
+    void arrivalHourSetter(int newHour){
+        arrivalHour = newHour;
+    }
+    void arrivalMinuteSetter(int newMinute){
+        arrivalMinute = newMinute;
+    }
+    void arrivalSecondSetter(int newSecond){
+        arrivalSecond = newSecond;
+    }
+
 };
