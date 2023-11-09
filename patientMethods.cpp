@@ -4,6 +4,7 @@
 #include <fstream>
 #include <chrono>
 
+#include "functions.h"
 #include "Patient.h"
 using namespace std;
 
@@ -109,7 +110,7 @@ void addPatient(){
     cin >> arrivalMinute;
     cout << "Patient Arrival Second: " << endl;
     cin >> arrivalSecond;
-    
+
     //Logging Patient data
     officeLogs << "Patient Arrival Time: " << arrivalHour << ":" << arrivalMinute << ":" << arrivalSecond << endl;
 

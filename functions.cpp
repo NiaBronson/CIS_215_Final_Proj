@@ -1,4 +1,7 @@
 #include "functions.h"
+#include "Patient.h"
+#include "Doctor.h"
+#include "Appointment.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -166,3 +169,35 @@ bool checkMenuChoice(int menuChoice){
         return true;
     }
 }
+
+void showAppointmentTypes(){
+    Appointment appointment;
+    int appointmentChoice = 0;
+    bool isValid;
+    if (appointmentChoice != 1 || appointmentChoice != 2){
+        isValid = false;
+    }
+    do{
+        cout << "Please select an appointment type from the list below:" << endl;
+        cout << "1. Preventative" << endl;
+        cout << "2. Sick" << endl;
+ 
+    } while (isValid == false);
+
+    switch(appointmentChoice){
+        case 1:
+            appointment.visitTypeSetter("Preventative");
+            break;
+        case 2:
+            appointment.visitTypeSetter("Sick");
+            break;
+        default:
+            appointment.visitTypeSetter("Invalid");
+            break;
+    }
+
+}
+
+
+
+
