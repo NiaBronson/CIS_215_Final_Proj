@@ -1,0 +1,95 @@
+using namespace std;
+#include <iostream>
+
+
+
+
+class Patient{
+
+    private:
+    string name;
+    string streetAddress;
+    string city;
+    string state;
+    string email;
+    string insuranceCompany;
+    double zipCode;
+    double phoneNumber;
+    double DoB;
+    long appointmentID;
+    long patientID;
+
+
+    public:
+    //Getters
+    string nameGetter(){
+        return name;
+    }
+    string streetAddressGetter(){
+        return streetAddress;
+    }
+    string cityGetter(){
+        return city;
+    }
+    string stateGetter(){
+        return state;
+    }
+    string emailGetter(){
+        return email;
+    }
+    string insuranceCompanyGetter(){
+        return insuranceCompany;
+    }
+    double zipCodeGetter(){
+        return zipCode;
+    }
+    double phoneNumberGetter(){
+        return phoneNumber;
+    }
+    double DoBGetter(){
+        return DoB;
+    }
+    double appointmentIDGetter(){
+        return appointmentID;
+    }
+    double patientIDGetter(){
+        return patientID;
+    }
+
+    //Setters
+    void nameSetter(string newName){
+        name = newName;
+    }
+    void streetAddressSetter(string newStreetAddress){
+        streetAddress = newStreetAddress;
+    }
+    void citySetter(string newCity){
+        city = newCity;
+    }
+    void stateSetter(string newState){
+        state = newState;
+    }
+    void emailSetter(string newEmail){
+        email = newEmail;
+    }
+    void insuranceCompanySetter(string newInsuranceCompany){
+        insuranceCompany = newInsuranceCompany;
+    }
+    void zipCodeSetter(double newZipCode){
+        zipCode = newZipCode;
+    }
+    void phoneNumberSetter(double newPhoneNumber){
+        phoneNumber = newPhoneNumber;
+    }
+    void DoBSetter(double newDoB){
+        DoB = newDoB;
+    }
+    void appointmentIDSetter(long newAppointmentID){
+        appointmentID = newAppointmentID;
+    }
+    void patientIDSetter(long newPatientID){
+        patientID = newPatientID;
+    }
+    
+
+};
