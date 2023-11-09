@@ -174,6 +174,10 @@ void showAppointmentTypes(){
     Appointment appointment;
     int appointmentChoice = 0;
     bool isValid;
+    ofstream officeLogs;
+    officeLogs.open("logs.txt");
+
+    
     if (appointmentChoice != 1 || appointmentChoice != 2){
         isValid = false;
     }
@@ -187,15 +191,19 @@ void showAppointmentTypes(){
     switch(appointmentChoice){
         case 1:
             appointment.visitTypeSetter("Preventative");
+            officeLogs << "Preventative Visit" << endl;
             break;
         case 2:
             appointment.visitTypeSetter("Sick");
+            officeLogs << "Sick Visit" << endl;
             break;
         default:
             appointment.visitTypeSetter("Invalid");
+            officeLogs << "Invalid: ERROR" << endl;
             break;
     }
 
+    officeLogs.close();
 }
 
 
