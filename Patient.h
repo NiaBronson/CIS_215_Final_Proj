@@ -1,5 +1,6 @@
 using namespace std;
 #include <iostream>
+#include "Account.h"
 
 
 
@@ -18,6 +19,7 @@ class Patient{
     double DoB;
     long appointmentID;
     long patientID;
+    Account patientAccount;
 
 
     public:
@@ -55,6 +57,12 @@ class Patient{
     double patientIDGetter(){
         return patientID;
     }
+    Account patientAccountGetter(){
+        return patientAccount;
+    }
+    float patientBalanceGetter(){
+        return patientAccount.balanceGetter();
+    }
 
     //Setters
     void nameSetter(string newName){
@@ -90,6 +98,8 @@ class Patient{
     void patientIDSetter(long newPatientID){
         patientID = newPatientID;
     }
-    
-
+    void patientAccountSetter(long patientID, float balance = 0);
+    void patientBalanceSetter(float newBalance){
+        patientAccount.balanceSetter(newBalance);
+    }
 };
