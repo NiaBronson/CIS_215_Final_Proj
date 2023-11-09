@@ -7,10 +7,11 @@ using namespace std;
 #include "Appointment.h"
 #include "Account.h"
 #include "functions.h"
+#include "PatientMethods.h"
 
 int main(){
 
-    showMenu();
+    //showMenu();
 
     return 0;
 }

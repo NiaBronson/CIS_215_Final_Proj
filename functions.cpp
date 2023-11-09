@@ -27,7 +27,8 @@ void showMenu(){
 
         isValidChoice = checkMenuChoice(menuChoice);
     } while (isValidChoice == false);
-        
+    
+    //Added in office logs   
     ofstream officeLogs("logs.txt");
 
     switch(menuChoice){
