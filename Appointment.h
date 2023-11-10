@@ -1,5 +1,6 @@
 using namespace std;
 #include <iostream>
+#include "Functions.h"
 
 
 class Appointment{
@@ -58,7 +59,7 @@ class Appointment{
         date = newDate;
     }
     void visitTypeSetter(string newVisitType){
-        visitType = newVisitType;
+        visitType = getAppointmentType();
     }
     void roomNumberSetter(int newRoomNumber){
         roomNumber = newRoomNumber;

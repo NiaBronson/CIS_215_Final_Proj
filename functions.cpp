@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void showMenu(){
+int showMenu(){
 
     int menuChoice;
     bool isValidChoice = true;
@@ -70,6 +70,7 @@ void showMenu(){
                 break;
         }
     officeLogs.close();
+    return menuChoice;
 }
 
 void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients, vector<double>& rooms) {
@@ -170,14 +171,14 @@ bool checkMenuChoice(int menuChoice){
     }
 }
 
-void showAppointmentTypes(){
-    Appointment appointment;
+string getAppointmentType(){
+    string appointmentType;
     int appointmentChoice = 0;
     bool isValid;
     ofstream officeLogs;
     officeLogs.open("logs.txt");
 
-    
+
     if (appointmentChoice != 1 || appointmentChoice != 2){
         isValid = false;
     }
@@ -190,20 +191,22 @@ void showAppointmentTypes(){
 
     switch(appointmentChoice){
         case 1:
-            appointment.visitTypeSetter("Preventative");
+            appointmentType = "Preventative";
             officeLogs << "Preventative Visit" << endl;
             break;
         case 2:
-            appointment.visitTypeSetter("Sick");
+            appointmentType = "Sick";
             officeLogs << "Sick Visit" << endl;
             break;
         default:
-            appointment.visitTypeSetter("Invalid");
+            appointmentType = "Invalid: ERROR";
             officeLogs << "Invalid: ERROR" << endl;
             break;
     }
 
     officeLogs.close();
+
+    return appointmentType;
 }
 
 

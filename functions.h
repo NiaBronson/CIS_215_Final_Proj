@@ -34,9 +34,10 @@ struct Patient2 {
     long appointmentID;
 };
 
-void showMenu();
+int showMenu();
 void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients,
             vector<double>& rooms);
 bool checkMenuChoice(int menuChoice);
+string getAppointmentType();
 
 #endif  // FUNCTIONS_H
