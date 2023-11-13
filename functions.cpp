@@ -210,5 +210,44 @@ string getAppointmentType(){
 }
 
 
+float calculateBill(string appointmentType, bool isInsured){
 
+    float bill = 0.0;
+    ofstream officeLogs;
+    officeLogs.open("logs.txt");
 
+    if (isInsured){
+        if (appointmentType == "Preventative"){
+            bill = 0.0;
+            cout << "Your insurance covers this visit! You will not be billed!" << endl;
+
+        }
+        else if(appointmentType == "Sick"){
+            bill = 50.95;
+            cout << "Your insurance covers part of this visit. You owe $50.95" << endl;
+        }
+        else{
+            cout << "ERROR: Invalid appointment type" << endl;
+        }
+    }
+    else if (!isInsured){
+        if (appointmentType == "Preventative"){
+            bill = 29.95;
+            cout << "You do not have insurance. You owe $29.95" << endl;
+        }
+        else if (appointmentType == "Sick"){
+            bill = 150.95;
+            cout << "You do not have insurance. You owe $150.95" << endl;
+        }
+        else {
+            cout << "ERROR: Invalid appointment type" << endl;
+        }
+    }
+    else{
+        cout << "ERROR: INVALID INSURANCE" << endl;
+    }
+
+    officeLogs << "Billed Amount: " << bill << endl;
+    officeLogs.close();
+    return bill;
+}

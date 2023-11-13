@@ -39,5 +39,6 @@ void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients,
             vector<double>& rooms);
 bool checkMenuChoice(int menuChoice);
 string getAppointmentType();
+float calculateBill(string appointmentType, bool isInsured);
 
 #endif  // FUNCTIONS_H

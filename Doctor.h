@@ -14,6 +14,8 @@ class Doctor{
     double phoneNumber;
     long appointmentID;
     long employeeID;
+    Account employeeAccount;
+
 
     public:
     //Getters
@@ -44,6 +46,12 @@ class Doctor{
     double employeeIDGetter(){
         return employeeID;
     }
+    Account patientAccountGetter(){
+        return employeeAccount;
+    }
+    float patientBalanceGetter(){
+        return employeeAccount.balanceGetter();
+    }
     
 
     //Setters
@@ -73,6 +81,12 @@ class Doctor{
     }
     void employeeIDSetter(double newEmployeeID){
         employeeID = newEmployeeID;
+    }
+
+    void employeeAccountSetter(long employeeID, float balance = 0);
+    
+    void employeeBalanceSetter(float newBalance){
+        employeeAccount.balanceSetter(newBalance);
     }
 
 };
