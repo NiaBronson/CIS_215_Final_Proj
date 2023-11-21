@@ -409,4 +409,44 @@ void addPatient(){
 
 }
 
+int main() {
+    vector<Doctor> doctors;
+    vector<Patient> patients;
+    vector<double> rooms;
 
+    //TEST 1 CODE
+    readIn(doctors, patients, rooms);
+
+    for (int i = 0; i < doctors.size(); i++) {
+        cout << doctors[i].fNameGetter() << endl;
+        cout << doctors[i].lNameGetter() << endl;
+        cout << doctors[i].streetAddressGetter() << endl;
+        cout << doctors[i].cityGetter() << endl;
+        cout << doctors[i].stateGetter() << endl;
+        cout << doctors[i].zipCodeGetter() << endl;
+        cout << doctors[i].phoneNumberGetter() << endl;
+        cout << doctors[i].emailGetter() << endl;
+        cout << doctors[i].employeeIDGetter() << endl;
+    }
+
+    for (int j = 0; j < patients.size(); j++){
+        cout << patients[j].arrivalTimeGetter() << endl;
+        cout << patients[j].fNameGetter() << endl;
+        cout << patients[j].lNameGetter() << endl;
+        cout << patients[j].streetAddressGetter() << endl;
+        cout << patients[j].cityGetter() << endl;
+        cout << patients[j].stateGetter() << endl;
+        cout << patients[j].emailGetter() << endl;
+        cout << patients[j].insuranceCompanyGetter() << endl;
+        cout << patients[j].DoBGetter() << endl;
+        cout << patients[j].zipCodeGetter() << endl;
+        cout << patients[j].phoneNumberGetter() << endl;
+        cout << patients[j].patientIDGetter() << endl;        
+    }
+
+    for (int k = 0; k < rooms.size(); k++){
+        cout << rooms[k] << endl;
+    }
+
+    return 0;
+}
