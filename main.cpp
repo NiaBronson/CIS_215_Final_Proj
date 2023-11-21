@@ -2,12 +2,8 @@ using namespace std;
 #include <iostream> 
 #include <vector>
 #include <fstream>
-#include "Doctor.h"
-#include "Patient.h"
-#include "Appointment.h"
-#include "Account.h"
-#include "functions.h"
-#include "PatientMethods.h"
+#include "doctors_office.h"
+#include "doctors_office.cpp"
 
 int main(){
     int choice;

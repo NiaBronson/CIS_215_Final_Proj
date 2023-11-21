@@ -1,19 +1,20 @@
 #include "doctors_office.h"
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+
 #include <chrono>
+#include <fstream>
+#include <map>
+#include <iostream>
 #include <queue>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-int showMenu(){
-
+int showMenu() {
     int menuChoice;
     bool isValidChoice = true;
 
-    do{
+    do {
         cout << "Welcome to the Office Manager!" << endl;
         cout << "Please select an option from the menu below:" << endl;
         cout << "1. Load Data" << endl;
@@ -29,50 +30,51 @@ int showMenu(){
 
         isValidChoice = checkMenuChoice(menuChoice);
     } while (isValidChoice == false);
-    
-    //Added in office logs   
+
+    // Added in office logs
     ofstream officeLogs("logs.txt");
     officeLogs.open("logs.txt");
 
-    switch(menuChoice){
-            case 1:
-                cout << "You chose to load data" << endl;
-                officeLogs << "Loaded Data" << endl; 
-                break;
-            case 2:
-                cout << "You chose to add a new doctor" << endl;
-                officeLogs << "Added New Doctor" << endl;
-                break;
-            case 3:
-                cout << "You chose to add a new patient" << endl;
-                officeLogs << "Added New Patient" << endl;
-                break;
-            case 4:
-                cout << "You chose to view the patient queue summary" << endl;
-                officeLogs << "Viewed Patient Queue Summary" << endl;
-                break;
-            case 5:
-                cout << "You chose to view the doctor summary" << endl;
-                officeLogs << "Viewed Doctor Summary" << endl;
-                break;
-            case 6:
-                cout << "You chose to check out a patient" << endl;
-                officeLogs << "Checked Patient Out" << endl;
-                break;
-            case 7:
-                cout << "You chose to close the office" << endl;
-                officeLogs << "Closing Office" << endl;
-                break;
-            default:
-                cout << "Invalid Choice" << endl;
-                officeLogs << "Invalid Choice" << endl;
-                break;
-        }
+    switch (menuChoice) {
+        case 1:
+            cout << "You chose to load data" << endl;
+            officeLogs << "Loaded Data" << endl;
+            break;
+        case 2:
+            cout << "You chose to add a new doctor" << endl;
+            officeLogs << "Added New Doctor" << endl;
+            break;
+        case 3:
+            cout << "You chose to add a new patient" << endl;
+            officeLogs << "Added New Patient" << endl;
+            break;
+        case 4:
+            cout << "You chose to view the patient queue summary" << endl;
+            officeLogs << "Viewed Patient Queue Summary" << endl;
+            break;
+        case 5:
+            cout << "You chose to view the doctor summary" << endl;
+            officeLogs << "Viewed Doctor Summary" << endl;
+            break;
+        case 6:
+            cout << "You chose to check out a patient" << endl;
+            officeLogs << "Checked Patient Out" << endl;
+            break;
+        case 7:
+            cout << "You chose to close the office" << endl;
+            officeLogs << "Closing Office" << endl;
+            break;
+        default:
+            cout << "Invalid Choice" << endl;
+            officeLogs << "Invalid Choice" << endl;
+            break;
+    }
     officeLogs.close();
     return menuChoice;
 }
 
-void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& rooms) {
+void readIn(vector<Doctor>& doctors, vector<Patient>& patients,
+            vector<double>& rooms) {
     ifstream inFile("officeMgr.dat");
 
     if (!inFile) {
@@ -81,7 +83,7 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
         return;
     }
 
-    Doctor doctor; 
+    Doctor doctor;
     Patient patient;
     string line;
     int room;
@@ -94,13 +96,12 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
         }
 
         if (line == "Doctors") {
-            //Repeats for each doctor
-            for (int i = 0; i < 3; i++){
+            // Repeats for each doctor
+            for (int i = 0; i < 3; i++) {
                 // Make a new doc object
                 doctor = Doctor();
 
-
-                //Read in the string and non string doc data
+                // Read in the string and non string doc data
                 getline(inFile >> ws, placeholder);
                 doctor.fnameSetter(placeholder);
 
@@ -116,7 +117,6 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
                 getline(inFile, placeholder);
                 doctor.stateSetter(placeholder);
 
-
                 inFile >> placeholder;
                 doctor.zipCodeSetter(doublePlaceholder);
                 inFile.ignore();
@@ -124,25 +124,27 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
                 doctor.phoneNumberSetter(placeholder);
 
                 getline(inFile, placeholder);
-                doctor.emailSetter(placeholder); 
+                doctor.emailSetter(placeholder);
 
                 inFile >> doublePlaceholder;
                 doctor.employeeIDSetter(doublePlaceholder);
                 inFile.ignore();
 
-                //Add doc to the vector
+                // Add doc to the vector
                 doctors.push_back(doctor);
             }
-           
+
         }
 
-        else if (line == "Patients"){
-            for (int i = 0; i < 5; i++){
-                //new patient object
+        else if (line == "Patients") {
+            for (int i = 0; i < 5; i++) {
+                // new patient object
                 patient = Patient();
 
-                //Read in the string patient data
-                getline(inFile >> ws, placeholder); //skip whitespace or else everything will be displaced by one
+                // Read in the string patient data
+                getline(inFile >> ws,
+                        placeholder);  // skip whitespace or else everything
+                                       // will be displaced by one
                 patient.arrivalTimeSetter(placeholder);
 
                 getline(inFile, placeholder);
@@ -152,21 +154,20 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
                 patient.lNameSetter(placeholder);
 
                 getline(inFile, placeholder);
-                patient.streetAddressSetter(placeholder);\
+                patient.streetAddressSetter(placeholder);
 
                 getline(inFile, placeholder);
                 patient.citySetter(placeholder);
 
                 getline(inFile, placeholder);
                 patient.stateSetter(placeholder);
-                
+
                 inFile >> placeholder;
                 patient.zipCodeSetter(doublePlaceholder);
 
                 inFile.ignore();
                 getline(inFile, placeholder);
                 patient.phoneNumberSetter(placeholder);
-
 
                 getline(inFile, placeholder);
                 patient.emailSetter(placeholder);
@@ -186,8 +187,8 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
             }
         }
 
-        else if (line == "Rooms"){
-            for (int i = 0; i < 5; i++){
+        else if (line == "Rooms") {
+            for (int i = 0; i < 5; i++) {
                 inFile >> room;
                 rooms.push_back(room);
             }
@@ -197,37 +198,35 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& 
     inFile.close();
 }
 
-
-bool checkMenuChoice(int menuChoice){
-    if (menuChoice < 1 || menuChoice > 7){
+bool checkMenuChoice(int menuChoice) {
+    if (menuChoice < 1 || menuChoice > 7) {
         cout << "Invalid Choice. Please try again" << endl;
         cout << endl;
         return false;
-    }
-    else{
+    } else {
         return true;
     }
 }
 
-string getAppointmentType(){
+string getAppointmentType() {
     string appointmentType;
     int appointmentChoice = 0;
     bool isValid;
     ofstream officeLogs;
     officeLogs.open("logs.txt");
 
-
-    if (appointmentChoice != 1 || appointmentChoice != 2){
+    if (appointmentChoice != 1 || appointmentChoice != 2) {
         isValid = false;
     }
-    do{
-        cout << "Please select an appointment type from the list below:" << endl;
+    do {
+        cout << "Please select an appointment type from the list below:"
+             << endl;
         cout << "1. Preventative" << endl;
         cout << "2. Sick" << endl;
- 
+
     } while (isValid == false);
 
-    switch(appointmentChoice){
+    switch (appointmentChoice) {
         case 1:
             appointmentType = "Preventative";
             officeLogs << "Preventative Visit" << endl;
@@ -247,41 +246,35 @@ string getAppointmentType(){
     return appointmentType;
 }
 
-
-float calculateBill(string appointmentType, bool isInsured){
-
+float calculateBill(string appointmentType, bool isInsured) {
     float bill = 0.0;
     ofstream officeLogs;
     officeLogs.open("logs.txt");
 
-    if (isInsured){
-        if (appointmentType == "Preventative"){
+    if (isInsured) {
+        if (appointmentType == "Preventative") {
             bill = 0.0;
-            cout << "Your insurance covers this visit! You will not be billed!" << endl;
+            cout << "Your insurance covers this visit! You will not be billed!"
+                 << endl;
 
-        }
-        else if(appointmentType == "Sick"){
+        } else if (appointmentType == "Sick") {
             bill = 50.95;
-            cout << "Your insurance covers part of this visit. You owe $50.95" << endl;
-        }
-        else{
+            cout << "Your insurance covers part of this visit. You owe $50.95"
+                 << endl;
+        } else {
             cout << "ERROR: Invalid appointment type" << endl;
         }
-    }
-    else if (!isInsured){
-        if (appointmentType == "Preventative"){
+    } else if (!isInsured) {
+        if (appointmentType == "Preventative") {
             bill = 29.95;
             cout << "You do not have insurance. You owe $29.95" << endl;
-        }
-        else if (appointmentType == "Sick"){
+        } else if (appointmentType == "Sick") {
             bill = 150.95;
             cout << "You do not have insurance. You owe $150.95" << endl;
-        }
-        else {
+        } else {
             cout << "ERROR: Invalid appointment type" << endl;
         }
-    }
-    else{
+    } else {
         cout << "ERROR: INVALID INSURANCE" << endl;
     }
 
@@ -289,7 +282,6 @@ float calculateBill(string appointmentType, bool isInsured){
     officeLogs.close();
     return bill;
 }
-
 
 /*
 Goals for this method:
@@ -301,16 +293,22 @@ patient to the end of the queue.
 - Add patient to quueeueueueueu
 
 Queue - first in, first out
-Stack - first in, last out 
+Stack - first in, last out
 
 */
 
-vector <Patient> patients;
-queue <Patient> patientQueue;
+vector<Patient> patients;
+queue<Patient> patientQueue;
 
-Patient setPatientData(){
+// Map of doctors and their availability
+//True indicates available, false indicates unavailable
+std::map<Doctor, bool> doctorAvailability;
+
+
+
+Patient setPatientData() {
     Patient currPatient;
-    //Variables
+    // Variables
     string name;
     string streetAddress;
     string city;
@@ -327,11 +325,10 @@ Patient setPatientData(){
     cout << "Patient First Name: " << endl;
     cin >> name;
     currPatient.fNameSetter(name);
-    
+
     cout << "Patient Last Name: " << endl;
     cin >> name;
     currPatient.lNameSetter(name);
-
 
     cout << "Patient Street Address: " << endl;
     cin >> streetAddress;
@@ -340,12 +337,12 @@ Patient setPatientData(){
     cout << "Patient City: " << endl;
     cin >> city;
     currPatient.citySetter(city);
-    
+
     cout << "Patient State: " << endl;
     cin >> state;
     currPatient.stateSetter(state);
 
-    //Consider special input parameters for this 
+    // Consider special input parameters for this
     cout << "Patient Email: " << endl;
     cin >> email;
     currPatient.emailSetter(email);
@@ -376,45 +373,123 @@ Patient setPatientData(){
 
     patients.push_back(currPatient);
     return currPatient;
-
 }
 
-void addPatient(){
-    //Opening the logs file to output patient logs
+Doctor setDoctorData(){
+    Doctor currDoc;
+    // Variables
+    string fName;
+    string lName;
+    string streetAddress;
+    string city;
+    string state;
+    string email;
+    double zipCode;
+    string phoneNumber;
+    long appointmentID;
+    long employeeID;
+    Account employeeAccount;
+
+    cout << "Doctor First Name: " << endl;
+    cin >> fName;
+    currDoc.fnameSetter(fName);
+
+    cout << "Doctor Last Name: " << endl;
+    cin >> lName;
+    currDoc.lnameSetter(lName);
+
+    cout << "Doctor Street Address: " << endl;
+    cin >> streetAddress;
+    currDoc.streetAddressSetter(streetAddress);
+
+    cout << "Doctor City: " << endl;
+    cin >> city;
+    currDoc.citySetter(city);
+
+    cout << "Doctor State: " << endl;
+    cin >> state;
+    currDoc.stateSetter(state);
+
+    // Consider special input parameters for this
+    cout << "Doctor Email: " << endl;
+    cin >> email;
+
+    currDoc.emailSetter(email);
+
+    cout << "Doctor Zip Code: " << endl;
+    cin >> zipCode; 
+    currDoc.zipCodeSetter(zipCode);
+
+    cout << "Doctor Phone Number: " << endl;
+    cin >> phoneNumber;
+    currDoc.phoneNumberSetter(phoneNumber);
+
+    cout << "Doctor Appointment ID: " << endl;
+    cin >> appointmentID;
+    currDoc.appointmentIDSetter(appointmentID);
+
+    cout << "Doctor ID: " << endl;
+    cin >> employeeID;
+    currDoc.employeeIDSetter(employeeID);
+
+    currDoc.employeeAccountSetter(employeeID, 0);
+
+
+    doctorAvailability.insert(make_pair(currDoc, true));
+    return currDoc;
+}   
+
+
+void addPatient() {
+    // Opening the logs file to output patient logs
     ofstream officeLogs;
     officeLogs.open("logs.txt");
 
-    int arrivalHour, arrivalMinute, arrivalSecond;
+    string arrivalTime;
 
-    //Getting arrival time
-    //Curr time won't update until recompilation 
-    //Tried different methods
-    //auto arrivalTime = std::chrono::system_clock::now();
+    // Getting arrival time
+    // Curr time won't update until recompilation
+    // Tried different methods
+    // auto arrivalTime = std::chrono::system_clock::now();
 
-    //Getting arrival time
-    cout << "Patient Arrival Hour: " << endl;
-    cin >> arrivalHour;
-    cout << "Patient Arrival Minute: " << endl;
-    cin >> arrivalMinute;
-    cout << "Patient Arrival Second: " << endl;
-    cin >> arrivalSecond;
+    // Getting arrival time
+    cout << "Patient Arrival Time " << endl;
+    cin >> arrivalTime;
 
-    //Logging Patient data
-    officeLogs << "Patient Arrival Time: " << arrivalHour << ":" << arrivalMinute << ":" << arrivalSecond << endl;
+    // Logging Patient data
+    officeLogs << "Patient Arrival Time: " << arrivalTime << endl;
 
-    //Getting patient data and adding patient to queue
+    // Getting patient data and adding patient to queue
     Patient currPatient = setPatientData();
+    currPatient.arrivalTimeSetter(arrivalTime);
     patientQueue.push(currPatient);
-
-
 }
 
+
+
+void addDoctor() {
+    /*
+    Your code should prompt the office manager to enter doctor details and the
+    doctor should become available to assign to patients.
+    */
+    ofstream officeLogs;
+    officeLogs.open("logs.txt");
+
+    Doctor currDoc = setDoctorData();
+
+    // Logging Patient data
+    officeLogs << "Doctor Added: " << currDoc.fNameGetter() << " " << currDoc.lNameGetter() << endl;
+
+    
+}
+
+// TEST MAIN
 int main() {
     vector<Doctor> doctors;
     vector<Patient> patients;
     vector<double> rooms;
 
-    //TEST 1 CODE
+    // TEST 1 CODE
     readIn(doctors, patients, rooms);
 
     for (int i = 0; i < doctors.size(); i++) {
@@ -429,7 +504,7 @@ int main() {
         cout << doctors[i].employeeIDGetter() << endl;
     }
 
-    for (int j = 0; j < patients.size(); j++){
+    for (int j = 0; j < patients.size(); j++) {
         cout << patients[j].arrivalTimeGetter() << endl;
         cout << patients[j].fNameGetter() << endl;
         cout << patients[j].lNameGetter() << endl;
@@ -441,10 +516,10 @@ int main() {
         cout << patients[j].DoBGetter() << endl;
         cout << patients[j].zipCodeGetter() << endl;
         cout << patients[j].phoneNumberGetter() << endl;
-        cout << patients[j].patientIDGetter() << endl;        
+        cout << patients[j].patientIDGetter() << endl;
     }
 
-    for (int k = 0; k < rooms.size(); k++){
+    for (int k = 0; k < rooms.size(); k++) {
         cout << rooms[k] << endl;
     }
 
