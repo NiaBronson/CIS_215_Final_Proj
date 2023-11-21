@@ -1,7 +1,4 @@
-#include "functions.h"
-#include "Patient.h"
-#include "Doctor.h"
-#include "Appointment.h"
+#include "doctors_office.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -75,7 +72,7 @@ int showMenu(){
     return menuChoice;
 }
 
-void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients, vector<double>& rooms) {
+void readIn(vector<Doctor>& doctors, vector<Patient>& patients, vector<double>& rooms) {
     ifstream inFile("officeMgr.dat");
 
     if (!inFile) {
@@ -84,10 +81,12 @@ void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients, vector<double>
         return;
     }
 
-    Doctor2 doctor; 
-    Patient2 patient;
+    Doctor doctor; 
+    Patient patient;
     string line;
     int room;
+    string placeholder;
+    double doublePlaceholder;
 
     while (getline(inFile, line)) {
         if (line.empty()) {
@@ -98,22 +97,37 @@ void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients, vector<double>
             //Repeats for each doctor
             for (int i = 0; i < 3; i++){
                 // Make a new doc object
-                doctor = Doctor2();
+                doctor = Doctor();
 
-                //Read in the string  and non string doc data
-                getline(inFile >> ws, doctor.fname);
-                getline(inFile, doctor.lname);
-                getline(inFile, doctor.streetAddress);
-                getline(inFile, doctor.city);
-                getline(inFile, doctor.state);
 
-                inFile >> doctor.zipCode;
+                //Read in the string and non string doc data
+                getline(inFile >> ws, placeholder);
+                doctor.fnameSetter(placeholder);
+
+                getline(inFile, placeholder);
+                doctor.lnameSetter(placeholder);
+
+                getline(inFile, placeholder);
+                doctor.streetAddressSetter(placeholder);
+
+                getline(inFile, placeholder);
+                doctor.citySetter(placeholder);
+
+                getline(inFile, placeholder);
+                doctor.stateSetter(placeholder);
+
+
+                inFile >> placeholder;
+                doctor.zipCodeSetter(doublePlaceholder);
                 inFile.ignore();
-                getline(inFile, doctor.phoneNumber);
+                getline(inFile, placeholder);
+                doctor.phoneNumberSetter(placeholder);
 
-                getline(inFile, doctor.email);  
+                getline(inFile, placeholder);
+                doctor.emailSetter(placeholder); 
 
-                inFile >> doctor.employeeID;
+                inFile >> doublePlaceholder;
+                doctor.employeeIDSetter(doublePlaceholder);
                 inFile.ignore();
 
                 //Add doc to the vector
@@ -125,25 +139,47 @@ void readIn(vector<Doctor2>& doctors, vector<Patient2>& patients, vector<double>
         else if (line == "Patients"){
             for (int i = 0; i < 5; i++){
                 //new patient object
-                patient = Patient2();
+                patient = Patient();
 
                 //Read in the string patient data
-                getline(inFile >> ws, patient.time); //skip whitespace or else everything will be displaced by one
-                getline(inFile, patient.fname);
-                getline(inFile, patient.lname);
-                getline(inFile, patient.streetAddress);
-                getline(inFile, patient.city);
-                getline(inFile, patient.state);
+                getline(inFile >> ws, placeholder); //skip whitespace or else everything will be displaced by one
+                patient.arrivalTimeSetter(placeholder);
+
+                getline(inFile, placeholder);
+                patient.fNameSetter(placeholder);
+
+                getline(inFile, placeholder);
+                patient.lNameSetter(placeholder);
+
+                getline(inFile, placeholder);
+                patient.streetAddressSetter(placeholder);\
+
+                getline(inFile, placeholder);
+                patient.citySetter(placeholder);
+
+                getline(inFile, placeholder);
+                patient.stateSetter(placeholder);
                 
-                inFile >> patient.zipCode;
+                inFile >> placeholder;
+                patient.zipCodeSetter(doublePlaceholder);
+
                 inFile.ignore();
-                getline(inFile, patient.phoneNumber);
+                getline(inFile, placeholder);
+                patient.phoneNumberSetter(placeholder);
 
-                getline(inFile, patient.email);
-                getline(inFile, patient.dob);
-                getline(inFile, patient.insuranceCompany);
 
-                inFile >> patient.patientID;
+                getline(inFile, placeholder);
+                patient.emailSetter(placeholder);
+
+                getline(inFile, placeholder);
+                patient.DoBSetter(placeholder);
+
+                getline(inFile, placeholder);
+                patient.insuranceCompanySetter(placeholder);
+
+                inFile >> doublePlaceholder;
+                patient.patientIDSetter(doublePlaceholder);
+
                 inFile.ignore();
 
                 patients.push_back(patient);
@@ -282,15 +318,20 @@ Patient setPatientData(){
     string email;
     string insuranceCompany;
     double zipCode;
-    double phoneNumber;
-    double DoB;
+    string phoneNumber;
+    string DoB;
     long appointmentID;
     long patientID;
     int arrivalHour, arrivalMinute, arrivalSecond;
 
-    cout << "Patient Name: " << endl;
+    cout << "Patient First Name: " << endl;
     cin >> name;
-    currPatient.nameSetter(name);
+    currPatient.fNameSetter(name);
+    
+    cout << "Patient Last Name: " << endl;
+    cin >> name;
+    currPatient.lNameSetter(name);
+
 
     cout << "Patient Street Address: " << endl;
     cin >> streetAddress;
