@@ -15,7 +15,9 @@ queue<Patient> patientQueue;
 // Map of doctors and their availability
 // True indicates available, false indicates unavailable
 std::map<Doctor, bool> doctorAvailability;
-std::map<double, Appointment> appointments;
+std::map<Patient, Appointment> appointments;
+std::map<double, bool> officeRooms;
+std::map<long, Patient> patientsMap;
 
 // MENU FUNCTIONS
 int showMenu() {
@@ -342,6 +344,7 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients,
             for (int i = 0; i < 5; i++) {
                 inFile >> room;
                 rooms.push_back(room);
+                officeRooms.insert(make_pair(rooms[i], false));
             }
         }
     }
@@ -415,8 +418,12 @@ void addPatient() {
     // Adding patient into the queue
     patientQueue.push(currPatient);
 
+    //Adding patient to their ID Map
+    patientsMap.insert(make_pair(currPatient.patientIDGetter(), currPatient));
+
     // Creating their appointment
     createAppointment(currPatient);
+
 }
 
 void addDoctor() {
@@ -441,15 +448,13 @@ void createAppointment(Patient myPatient) {
     cin >> date;
 
     // Creating current appointment
-    Appointment currAppointment(myPatient.fNameGetter(),
-                                myPatient.lNameGetter(),
-                                myPatient.patientIDGetter(), date,
-                                getAppointmentType(), myPatient.arrivalTimeGetter());
-
+    Appointment currAppointment(
+        myPatient.fNameGetter(), myPatient.lNameGetter(),
+        myPatient.patientIDGetter(), date, getAppointmentType(),
+        myPatient.arrivalTimeGetter());
 
     // Adding appointment to map
-    appointments.insert(
-        make_pair(myPatient.patientIDGetter(), currAppointment));
+    myPatient.appointmentSetter(currAppointment);
 }
 
 // OTHER FUNCTIONS
@@ -491,21 +496,81 @@ float calculateBill(string appointmentType, bool isInsured) {
     return bill;
 }
 
-void patientQueueSummary() {
-    /*
-    Your code will display existing appointments sorted by the patients order of
-arrival.
-The patient’s name and arrival time are the only details necessary to
-display.
-The office manager should then be asked if they want to assign a
-patient.
-If yes, a menu of empty rooms should be displayed.
-The office manager should be able to create an appointment and update it with
-the first patient in the list (with the earliest arrival time) and an empty
-room.
-    */
+void patientQueueSummary(vector<double>& rooms) {
+
+    Patient person;
+    Patient firstPatient;
+
+    cout << "Patient Queue Summary:" << endl;
+
+    // Displaying the patient queue
+    for (auto& pair : appointments) {
+        person = pair.first;
+        cout << "Patient Name: " << person.fNameGetter() << " "
+             << person.lNameGetter()
+             << " Patient Arrival Time: " << person.arrivalTimeGetter() << endl;
+    }
+
+    // Asking if they want to assign a patient
+    char choice;
+    bool isValid = false;
+
+    cout << "Would you like to assign a patient? Please type Y or N." << endl;
+    cin >> choice;
+
+    // Choice Validation
+    while (!isValid) {
+        if (choice != 'Y' || choice != 'N' || choice != 'y' || choice != 'n') {
+            cout << "Invalid Choice. Please try again." << endl;
+            cin >> choice;
+        } else {
+            isValid = true;
+        }
+    }
+
+    int roomCount = 0;
+    double patientID;
+
+    if (choice == 'Y' || choice == 'y') {
+        // Displaying rooms
+        for (auto& pair : officeRooms) {
+            if (pair.second == false) {
+                cout << "Room Number: " << pair.first << endl;
+                roomCount++;
+            }
+        }
+        if (roomCount == 0) {
+            cout << "Sorry, there are no rooms available!" << endl;
+        } else {
+            cout << "Please enter the room number you would like to assign the "
+                    "patient to."
+                 << endl;
+            int roomNumber;
+            cin >> roomNumber;
+
+            //find the first available person 
+            firstPatient = patientQueue.front();
+            
+            //Assign the patient their own room number
+            firstPatient.appointmentRoomNumberSetter(roomNumber);
+
+            //Remove patient from the line
+            patientQueue.pop();
+
+
+        }
+    }
+    else{
+        cout << "Exiting" << endl;
+        return;
+    }
+
 }
+
+
 // TEST MAIN
+
+
 int main() {
     vector<Doctor> doctors;
     vector<Patient> patients;
