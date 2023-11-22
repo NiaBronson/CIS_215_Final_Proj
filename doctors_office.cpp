@@ -28,6 +28,20 @@ int showMenu() {
     int menuChoice;
     bool isValidChoice = true;
 
+    vector<Patient> patients;
+    vector<Doctor> doctors;
+    vector<double> rooms;
+    vector<Appointment> appointments;
+
+    queue<Patient> patientQueue;
+    // Map of doctors and their availability
+    // True indicates available, false indicates unavailable
+    std::map<Doctor, bool> doctorAvailability;
+    std::map<Patient, Appointment> appointmentMap;
+    std::map<double, bool> officeRooms;
+    std::map<long, Patient> patientsMap;
+
+
     do {
         cout << "Welcome to the Office Manager!" << endl;
         cout << "Please select an option from the menu below:" << endl;
@@ -52,30 +66,40 @@ int showMenu() {
     switch (menuChoice) {
         case 1:
             cout << "You chose to load data" << endl;
+            readIn(doctors, patients, rooms);
             officeLogs << "Loaded Data" << endl;
             break;
         case 2:
             cout << "You chose to add a new doctor" << endl;
+            addDoctor();
             officeLogs << "Added New Doctor" << endl;
             break;
         case 3:
             cout << "You chose to add a new patient" << endl;
+            addPatient();
             officeLogs << "Added New Patient" << endl;
             break;
         case 4:
             cout << "You chose to view the patient queue summary" << endl;
+            patientQueueSummary(rooms, patientQueue);
             officeLogs << "Viewed Patient Queue Summary" << endl;
             break;
         case 5:
+            double ID;
             cout << "You chose to view the doctor summary" << endl;
+            cout << "Enter Patient ID; " << endl;
+            cin >> ID; 
+            doctorSummary(doctors, ID);
             officeLogs << "Viewed Doctor Summary" << endl;
             break;
         case 6:
             cout << "You chose to check out a patient" << endl;
+            checkoutPatient(doctors, patients, appointments);
             officeLogs << "Checked Patient Out" << endl;
             break;
         case 7:
             cout << "You chose to close the office" << endl;
+            closeOffice(doctors, patients);
             officeLogs << "Closing Office" << endl;
             break;
         default:
@@ -665,12 +689,12 @@ void checkoutPatient(vector<Doctor>& doctors, vector<Patient>& patients,
     bool isInsured;
     double patientID, doctorID;
 
-
     cout << "Existing Appointments: " << endl;
 
     for (int i = 0; i < appointments.size(); i++) {
-        cout << i+1 << ". Patient Name: " << appointments[i].patientfNameGetter() << " "
-             << appointments[i].patientlNameGetter()
+        cout << i + 1
+             << ". Patient Name: " << appointments[i].patientfNameGetter()
+             << " " << appointments[i].patientlNameGetter()
              << " PatientID: " << appointments[i].patientIDGetter()
              << " Doctor Name: " << appointments[i].doctorfNameGetter() << " "
              << appointments[i].doctorlNameGetter()
@@ -685,33 +709,49 @@ void checkoutPatient(vector<Doctor>& doctors, vector<Patient>& patients,
     patientID = closeAppointment.patientIDGetter();
     doctorID = closeAppointment.doctorIDGetter();
 
-    for(int i = 0; i < patients.size(); i++){
-        if (patients[i].patientIDGetter() == patientID){
+    for (int i = 0; i < patients.size(); i++) {
+        if (patients[i].patientIDGetter() == patientID) {
             closePatient = patients[i];
         }
     }
-    for(int i = 0; i < doctors.size(); i++){
-        if (doctors[i].employeeIDGetter() == doctorID){
+    for (int i = 0; i < doctors.size(); i++) {
+        if (doctors[i].employeeIDGetter() == doctorID) {
             closeDoctor = doctors[i];
         }
     }
 
-
-    if (closePatient.insuranceCompanyGetter() != "NA"){
+    if (closePatient.insuranceCompanyGetter() != "NA") {
         isInsured = true;
-    }
-    else{
+    } else {
         isInsured = false;
     }
-    
+
     float amountOwed = calculateBill(appointmentType, isInsured);
 
     closePatient.patientBalanceSetter(-amountOwed);
     closeDoctor.employeeBalanceSetter(amountOwed);
-    
 }
 // TEST MAIN
 
+void closeOffice(vector<Doctor>& doctors, vector<Patient>& patients) {
+    /*
+     Close office -> Log money earned by doctors and exit program.
+    Your code should write to file all the account balances for the doctors and the
+    number of patients seen by the office. Your program should exit.
+    */
+
+    // Added in office logs
+    ofstream officeLogs("logs.txt");
+    officeLogs.open("logs.txt");
+
+    int count = 0;
+
+    for (int i = 0; i < patients.size(); i++){
+        count++;
+    }
+    officeLogs << "You saw " << count << " patients today!" << endl;
+
+}
 int main() {
     vector<Doctor> doctors;
     vector<Patient> patients;

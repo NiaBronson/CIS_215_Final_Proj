@@ -6,8 +6,23 @@ using namespace std;
 #include "doctors_office.cpp"
 
 int main(){
-    int choice;
-    choice = showMenu();
+   
+    vector<Patient> patients;
+    vector<Doctor> doctors;
+    vector<double> rooms;
+    vector<Appointment> appointments;
+
+    queue<Patient> patientQueue;
+    // Map of doctors and their availability
+    // True indicates available, false indicates unavailable
+    std::map<Doctor, bool> doctorAvailability;
+    std::map<Patient, Appointment> appointmentMap;
+    std::map<double, bool> officeRooms;
+    std::map<long, Patient> patientsMap;
+
+
+    showMenu();
+
 
     // switch(choice){
     //     case 1:
