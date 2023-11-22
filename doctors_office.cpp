@@ -2,14 +2,22 @@
 
 #include <chrono>
 #include <fstream>
-#include <map>
 #include <iostream>
+#include <map>
 #include <queue>
 #include <string>
 #include <vector>
 
 using namespace std;
 
+vector<Patient> patients;
+queue<Patient> patientQueue;
+// Map of doctors and their availability
+// True indicates available, false indicates unavailable
+std::map<Doctor, bool> doctorAvailability;
+std::map<double, Appointment> appointments;
+
+// MENU FUNCTIONS
 int showMenu() {
     int menuChoice;
     bool isValidChoice = true;
@@ -71,6 +79,149 @@ int showMenu() {
     }
     officeLogs.close();
     return menuChoice;
+}
+
+bool checkMenuChoice(int menuChoice) {
+    if (menuChoice < 1 || menuChoice > 7) {
+        cout << "Invalid Choice. Please try again" << endl;
+        cout << endl;
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// DATA SETTING FUNCTIONS
+Patient setPatientData() {
+    Patient currPatient;
+    // Variables
+    string name;
+    string streetAddress;
+    string city;
+    string state;
+    string email;
+    string insuranceCompany;
+    double zipCode;
+    string phoneNumber;
+    string DoB;
+    long appointmentID;
+    long patientID;
+    int arrivalHour, arrivalMinute, arrivalSecond;
+
+    cout << "Patient First Name: " << endl;
+    cin >> name;
+    currPatient.fNameSetter(name);
+
+    cout << "Patient Last Name: " << endl;
+    cin >> name;
+    currPatient.lNameSetter(name);
+
+    cout << "Patient Street Address: " << endl;
+    cin >> streetAddress;
+    currPatient.streetAddressSetter(streetAddress);
+
+    cout << "Patient City: " << endl;
+    cin >> city;
+    currPatient.citySetter(city);
+
+    cout << "Patient State: " << endl;
+    cin >> state;
+    currPatient.stateSetter(state);
+
+    // Consider special input parameters for this
+    cout << "Patient Email: " << endl;
+    cin >> email;
+    currPatient.emailSetter(email);
+
+    cout << "Patient Insurance Company: " << endl;
+    cin >> insuranceCompany;
+    currPatient.insuranceCompanySetter(insuranceCompany);
+
+    cout << "Patient Zip Code: " << endl;
+    cin >> zipCode;
+    currPatient.zipCodeSetter(zipCode);
+
+    cout << "Patient Phone Number: " << endl;
+    cin >> phoneNumber;
+    currPatient.phoneNumberSetter(phoneNumber);
+
+    cout << "Patient Date of Birth: " << endl;
+    cin >> DoB;
+    currPatient.DoBSetter(DoB);
+
+    cout << "Patient Appointment ID: " << endl;
+    cin >> appointmentID;
+    currPatient.appointmentIDSetter(appointmentID);
+
+    cout << "Patient ID: " << endl;
+    cin >> patientID;
+    currPatient.patientIDSetter(patientID);
+
+    patients.push_back(currPatient);
+    return currPatient;
+}
+
+Doctor setDoctorData() {
+    Doctor currDoc;
+    // Variables
+    string fName;
+    string lName;
+    string streetAddress;
+    string city;
+    string state;
+    string email;
+    double zipCode;
+    string phoneNumber;
+    long appointmentID;
+    long employeeID;
+    Account employeeAccount;
+
+    cout << "Doctor First Name: " << endl;
+    cin >> fName;
+    currDoc.fnameSetter(fName);
+
+    cout << "Doctor Last Name: " << endl;
+    cin >> lName;
+    currDoc.lnameSetter(lName);
+
+    cout << "Doctor Street Address: " << endl;
+    cin >> streetAddress;
+    currDoc.streetAddressSetter(streetAddress);
+
+    cout << "Doctor City: " << endl;
+    cin >> city;
+    currDoc.citySetter(city);
+
+    cout << "Doctor State: " << endl;
+    cin >> state;
+    currDoc.stateSetter(state);
+
+    // Consider special input parameters for this
+    cout << "Doctor Email: " << endl;
+    cin >> email;
+
+    currDoc.emailSetter(email);
+
+    cout << "Doctor Zip Code: " << endl;
+    cin >> zipCode;
+    currDoc.zipCodeSetter(zipCode);
+
+    cout << "Doctor Phone Number: " << endl;
+    cin >> phoneNumber;
+    currDoc.phoneNumberSetter(phoneNumber);
+
+    cout << "Doctor Appointment ID: " << endl;
+    cin >> appointmentID;
+    currDoc.appointmentIDSetter(appointmentID);
+
+    cout << "Doctor ID: " << endl;
+    cin >> employeeID;
+    currDoc.employeeIDSetter(employeeID);
+
+    currDoc.employeeAccountSetter(employeeID, 0);
+
+    doctorAvailability.insert(make_pair(currDoc, true));
+    return currDoc;
 }
 
 void readIn(vector<Doctor>& doctors, vector<Patient>& patients,
@@ -198,16 +349,6 @@ void readIn(vector<Doctor>& doctors, vector<Patient>& patients,
     inFile.close();
 }
 
-bool checkMenuChoice(int menuChoice) {
-    if (menuChoice < 1 || menuChoice > 7) {
-        cout << "Invalid Choice. Please try again" << endl;
-        cout << endl;
-        return false;
-    } else {
-        return true;
-    }
-}
-
 string getAppointmentType() {
     string appointmentType;
     int appointmentChoice = 0;
@@ -246,6 +387,73 @@ string getAppointmentType() {
     return appointmentType;
 }
 
+// CREATING FUNCTIONS
+
+void addPatient() {
+    // Opening the logs file to output patient logs
+    ofstream officeLogs;
+    officeLogs.open("logs.txt");
+
+    string arrivalTime;
+
+    // Getting arrival time
+    // Curr time won't update until recompilation
+    // Tried different methods
+    // auto arrivalTime = std::chrono::system_clock::now();
+
+    // Getting arrival time
+    cout << "Patient Arrival Time " << endl;
+    cin >> arrivalTime;
+
+    // Logging Patient data
+    officeLogs << "Patient Arrival Time: " << arrivalTime << endl;
+
+    // Getting patient data and adding patient to queue
+    Patient currPatient = setPatientData();
+    currPatient.arrivalTimeSetter(arrivalTime);
+
+    // Adding patient into the queue
+    patientQueue.push(currPatient);
+
+    // Creating their appointment
+    createAppointment(currPatient);
+}
+
+void addDoctor() {
+    /*
+    Your code should prompt the office manager to enter doctor details and the
+    doctor should become available to assign to patients.
+    */
+    ofstream officeLogs;
+    officeLogs.open("logs.txt");
+
+    Doctor currDoc = setDoctorData();
+
+    // Logging Patient data
+    officeLogs << "Doctor Added: " << currDoc.fNameGetter() << " "
+               << currDoc.lNameGetter() << endl;
+}
+
+void createAppointment(Patient myPatient) {
+    // Getting the date
+    string date;
+    cout << "What is the current date in MM/DD/YYYY format?" << endl;
+    cin >> date;
+
+    // Creating current appointment
+    Appointment currAppointment(myPatient.fNameGetter(),
+                                myPatient.lNameGetter(),
+                                myPatient.patientIDGetter(), date,
+                                getAppointmentType(), myPatient.arrivalTimeGetter());
+
+
+    // Adding appointment to map
+    appointments.insert(
+        make_pair(myPatient.patientIDGetter(), currAppointment));
+}
+
+// OTHER FUNCTIONS
+
 float calculateBill(string appointmentType, bool isInsured) {
     float bill = 0.0;
     ofstream officeLogs;
@@ -283,206 +491,20 @@ float calculateBill(string appointmentType, bool isInsured) {
     return bill;
 }
 
-/*
-Goals for this method:
-
-Your code should prompt the office manager to enter patient details and add that
-patient to the end of the queue.
-
-- Get patient data
-- Add patient to quueeueueueueu
-
-Queue - first in, first out
-Stack - first in, last out
-
-*/
-
-vector<Patient> patients;
-queue<Patient> patientQueue;
-
-// Map of doctors and their availability
-//True indicates available, false indicates unavailable
-std::map<Doctor, bool> doctorAvailability;
-
-
-
-Patient setPatientData() {
-    Patient currPatient;
-    // Variables
-    string name;
-    string streetAddress;
-    string city;
-    string state;
-    string email;
-    string insuranceCompany;
-    double zipCode;
-    string phoneNumber;
-    string DoB;
-    long appointmentID;
-    long patientID;
-    int arrivalHour, arrivalMinute, arrivalSecond;
-
-    cout << "Patient First Name: " << endl;
-    cin >> name;
-    currPatient.fNameSetter(name);
-
-    cout << "Patient Last Name: " << endl;
-    cin >> name;
-    currPatient.lNameSetter(name);
-
-    cout << "Patient Street Address: " << endl;
-    cin >> streetAddress;
-    currPatient.streetAddressSetter(streetAddress);
-
-    cout << "Patient City: " << endl;
-    cin >> city;
-    currPatient.citySetter(city);
-
-    cout << "Patient State: " << endl;
-    cin >> state;
-    currPatient.stateSetter(state);
-
-    // Consider special input parameters for this
-    cout << "Patient Email: " << endl;
-    cin >> email;
-    currPatient.emailSetter(email);
-
-    cout << "Patient Insurance Company: " << endl;
-    cin >> insuranceCompany;
-    currPatient.insuranceCompanySetter(insuranceCompany);
-
-    cout << "Patient Zip Code: " << endl;
-    cin >> zipCode;
-    currPatient.zipCodeSetter(zipCode);
-
-    cout << "Patient Phone Number: " << endl;
-    cin >> phoneNumber;
-    currPatient.phoneNumberSetter(phoneNumber);
-
-    cout << "Patient Date of Birth: " << endl;
-    cin >> DoB;
-    currPatient.DoBSetter(DoB);
-
-    cout << "Patient Appointment ID: " << endl;
-    cin >> appointmentID;
-    currPatient.appointmentIDSetter(appointmentID);
-
-    cout << "Patient ID: " << endl;
-    cin >> patientID;
-    currPatient.patientIDSetter(patientID);
-
-    patients.push_back(currPatient);
-    return currPatient;
-}
-
-Doctor setDoctorData(){
-    Doctor currDoc;
-    // Variables
-    string fName;
-    string lName;
-    string streetAddress;
-    string city;
-    string state;
-    string email;
-    double zipCode;
-    string phoneNumber;
-    long appointmentID;
-    long employeeID;
-    Account employeeAccount;
-
-    cout << "Doctor First Name: " << endl;
-    cin >> fName;
-    currDoc.fnameSetter(fName);
-
-    cout << "Doctor Last Name: " << endl;
-    cin >> lName;
-    currDoc.lnameSetter(lName);
-
-    cout << "Doctor Street Address: " << endl;
-    cin >> streetAddress;
-    currDoc.streetAddressSetter(streetAddress);
-
-    cout << "Doctor City: " << endl;
-    cin >> city;
-    currDoc.citySetter(city);
-
-    cout << "Doctor State: " << endl;
-    cin >> state;
-    currDoc.stateSetter(state);
-
-    // Consider special input parameters for this
-    cout << "Doctor Email: " << endl;
-    cin >> email;
-
-    currDoc.emailSetter(email);
-
-    cout << "Doctor Zip Code: " << endl;
-    cin >> zipCode; 
-    currDoc.zipCodeSetter(zipCode);
-
-    cout << "Doctor Phone Number: " << endl;
-    cin >> phoneNumber;
-    currDoc.phoneNumberSetter(phoneNumber);
-
-    cout << "Doctor Appointment ID: " << endl;
-    cin >> appointmentID;
-    currDoc.appointmentIDSetter(appointmentID);
-
-    cout << "Doctor ID: " << endl;
-    cin >> employeeID;
-    currDoc.employeeIDSetter(employeeID);
-
-    currDoc.employeeAccountSetter(employeeID, 0);
-
-
-    doctorAvailability.insert(make_pair(currDoc, true));
-    return currDoc;
-}   
-
-
-void addPatient() {
-    // Opening the logs file to output patient logs
-    ofstream officeLogs;
-    officeLogs.open("logs.txt");
-
-    string arrivalTime;
-
-    // Getting arrival time
-    // Curr time won't update until recompilation
-    // Tried different methods
-    // auto arrivalTime = std::chrono::system_clock::now();
-
-    // Getting arrival time
-    cout << "Patient Arrival Time " << endl;
-    cin >> arrivalTime;
-
-    // Logging Patient data
-    officeLogs << "Patient Arrival Time: " << arrivalTime << endl;
-
-    // Getting patient data and adding patient to queue
-    Patient currPatient = setPatientData();
-    currPatient.arrivalTimeSetter(arrivalTime);
-    patientQueue.push(currPatient);
-}
-
-
-
-void addDoctor() {
+void patientQueueSummary() {
     /*
-    Your code should prompt the office manager to enter doctor details and the
-    doctor should become available to assign to patients.
+    Your code will display existing appointments sorted by the patients order of
+arrival.
+The patient’s name and arrival time are the only details necessary to
+display.
+The office manager should then be asked if they want to assign a
+patient.
+If yes, a menu of empty rooms should be displayed.
+The office manager should be able to create an appointment and update it with
+the first patient in the list (with the earliest arrival time) and an empty
+room.
     */
-    ofstream officeLogs;
-    officeLogs.open("logs.txt");
-
-    Doctor currDoc = setDoctorData();
-
-    // Logging Patient data
-    officeLogs << "Doctor Added: " << currDoc.fNameGetter() << " " << currDoc.lNameGetter() << endl;
-
-    
 }
-
 // TEST MAIN
 int main() {
     vector<Doctor> doctors;
