@@ -3,6 +3,11 @@
         "iosfwd": "cpp",
         "iostream": "cpp",
         "__locale": "cpp",
-        "filesystem": "cpp"
-    }
+        "filesystem": "cpp",
+        "vector": "cpp"
+    },
+    "cSpell.words": [
+        "doctorf",
+        "doctorl"
+    ]
 }

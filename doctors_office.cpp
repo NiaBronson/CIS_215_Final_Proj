@@ -11,11 +11,15 @@
 using namespace std;
 
 vector<Patient> patients;
+vector<Doctor> doctors;
+vector<double> rooms;
+vector<Appointment> appointments;
+
 queue<Patient> patientQueue;
 // Map of doctors and their availability
 // True indicates available, false indicates unavailable
 std::map<Doctor, bool> doctorAvailability;
-std::map<Patient, Appointment> appointments;
+std::map<Patient, Appointment> appointmentMap;
 std::map<double, bool> officeRooms;
 std::map<long, Patient> patientsMap;
 
@@ -436,6 +440,9 @@ void addDoctor() {
 
     Doctor currDoc = setDoctorData();
 
+    //Adding our new friend to the list of doctors
+    doctors.push_back(currDoc);
+
     // Logging Patient data
     officeLogs << "Doctor Added: " << currDoc.fNameGetter() << " "
                << currDoc.lNameGetter() << endl;
@@ -496,7 +503,7 @@ float calculateBill(string appointmentType, bool isInsured) {
     return bill;
 }
 
-void patientQueueSummary(vector<double>& rooms) {
+void patientQueueSummary(vector<double>& rooms, queue<Patient>& patientQueue) {
 
     Patient person;
     Patient firstPatient;
@@ -504,7 +511,7 @@ void patientQueueSummary(vector<double>& rooms) {
     cout << "Patient Queue Summary:" << endl;
 
     // Displaying the patient queue
-    for (auto& pair : appointments) {
+    for (auto& pair : appointmentMap) {
         person = pair.first;
         cout << "Patient Name: " << person.fNameGetter() << " "
              << person.lNameGetter()
@@ -567,6 +574,73 @@ void patientQueueSummary(vector<double>& rooms) {
 
 }
 
+void doctorSummary(vector<Doctor>& doctors, double patientID){
+    /*
+    Should show submenu with the following: 
+    Doctors name, if occupied with the patient, and in what room 
+    You can then assign unoccupied doctors or see what patient an occupied doctor is seeing. 
+    */
+
+   int choice;
+   Doctor thisDoctor;
+
+   if(!showDocMenu(doctors)){
+        return;
+   }
+   for (int i = 0; i < doctors.size(); i++){
+      if(doctors[i].isAvailableGetter()){
+        cout << i+1 << ". Dr." << doctors[i].lNameGetter() << " is available." << endl;
+      }
+   }
+   cout << "Please select your doctor" << endl;
+   cin >> choice;
+   thisDoctor = doctors[choice-1];
+   thisDoctor.isAvailableSetter(false);
+
+    //Searching the appointments vector for the right appointment according to the patient ID
+    for (int i = 0; i < appointments.size(); i++){
+        if(appointments[i].patientIDGetter() == patientID){
+            appointments[i].doctorIDSetter(thisDoctor.employeeIDGetter());
+            appointments[i].doctorfNameSetter(thisDoctor.fNameGetter());
+            appointments[i].doctorlNameSetter(thisDoctor.lNameGetter());
+        }
+    }
+
+
+}
+
+bool showDocMenu(vector<Doctor>& doctors){
+    
+    cout << "Here is a menu of our Doctors:" <<endl;
+    for (int i = 0; i < doctors.size(); i++){
+        cout << "Dr. " << doctors[i].lNameGetter() << " - Available:" << doctors[i].isAvailableGetter() << endl;
+        cout << "Room Number: " << doctors[i].appointmentRoomNumberGetter() << endl;
+    }
+
+    char choice;
+    bool isValid = false;
+
+    cout << "Would you like to assign a patient? Please type Y or N." << endl;
+    cin >> choice;
+
+    // Choice Validation
+    while (!isValid) {
+        if (choice != 'Y' || choice != 'N' || choice != 'y' || choice != 'n') {
+            cout << "Invalid Choice. Please try again." << endl;
+            cin >> choice;
+        } else {
+            isValid = true;
+        }
+    }
+
+    if (choice == 'Y' || choice == 'y'){
+        return true;
+    }
+    else{
+        cout << "Exiting" << endl;
+        return;
+    }
+}
 
 // TEST MAIN
 
